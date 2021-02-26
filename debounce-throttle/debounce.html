@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="debounce-btn">提交</button>
+    <script>
+        function debounce (fn, time, triggleNow) {
+            let t = null
+            return function () {
+                // 收集函数参数
+                const args = arguments
+                if (t) {
+                    // 清除定时器
+                    clearTimeout(t)
+                }
+
+                // 立即执行
+                if (triggleNow) {
+                    // 定时器为空的时候立即执行
+                    let exec = !t
+                    t = setTimeout(() => {
+                        // 延迟将t设置为null（当t为null时就代表可以执行）
+                        t = null
+                    }, time);
+
+                    if (exec) {
+                        fn.apply(this, args)
+                    }
+                } else {
+                    // 不立即执行，重新计时延迟执行
+                    t = setTimeout(() => {
+                        fn.apply(this, args)
+                    }, time);
+                }
+            }
+        }
+
+        const btn = document.querySelector('#debounce-btn')
+        const handle = debounce(function () {
+            console.log('发起请求')
+        }, 1000, true)
+        btn.addEventListener('click', handle)
+    </script>
+</body>
+</html>
